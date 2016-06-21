@@ -1,10 +1,11 @@
+'use strict';
 
-var Analytics = require('analytics.js-core').constructor;
-var integration = require('analytics.js-integration');
-var tester = require('analytics.js-integration-tester');
-var date = require('load-date');
-var sandbox = require('clear-env');
+var Analytics = require('@segment/analytics.js-core').constructor;
+var integration = require('@segment/analytics.js-integration');
+var tester = require('@segment/analytics.js-integration-tester');
+var sandbox = require('@segment/clear-env');
 var Pingdom = require('../lib/');
+var sinon = require('sinon');
 
 describe('Pingdom', function() {
   var analytics;
@@ -26,6 +27,17 @@ describe('Pingdom', function() {
     analytics.reset();
     pingdom.reset();
     sandbox();
+  });
+
+  // XXX(ndhoule): Pingdom's library registers some onunload/etc. events that
+  // don't account for the PRUM_EPISODES library being unavailable
+  // (pingdom#reset removes it) and so unless we mock it out, we'll get a page
+  // unload error, which Karma will interpret as test failure. I tried removing
+  // the events but no dice on IE, so this hax is easiest.
+  after(function() {
+    window.PRUM_EPISODES = {
+      onUnload: function() {}
+    };
   });
 
   it('should have the right settings', function() {
@@ -63,14 +75,22 @@ describe('Pingdom', function() {
   });
 
   describe('after loading', function() {
+    var date;
+    var clock;
     beforeEach(function(done) {
       analytics.once('ready', done);
+      date = new Date();
+      clock = sinon.useFakeTimers(date.getTime());
       analytics.initialize();
       analytics.page();
     });
 
+    afterEach(function() {
+      clock.restore();
+    });
+
     it('should mark the first byte', function() {
-      analytics.equal(date.getTime(), window.PRUM_EPISODES.marks.firstbyte);
+      analytics.equal(window.PRUM_EPISODES.marks.firstbyte, date.getTime());
     });
   });
 });
