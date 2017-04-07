@@ -38,30 +38,7 @@ describe('Pingdom', function() {
   // the events but no dice on IE, so this hax is easiest.
   after(function() {
     window.PRUM_EPISODES = {
-      onUnload: noop(),
-      beforeUnload: noop(),
-      done: noop(),
-      init: noop(),
-      processQ: noop(),
-      mark: noop(),
-      measure: noop(),
-      getMarks: noop(),
-      getMeasures: noop(),
-      getStarts: noop(),
-      findStartTime: noop(),
-      findStartWebTiming: noop(),
-      findStartGToolbar: noop(),
-      findStartValue: noop(),
-      findStartCookie: noop(),
-      findStartStorage: noop(),
-      initStorage: noop(),
-      setStartValue: noop(),
-      setStartStorage: noop(),
-      setStartCookie: noop(),
-      onload: noop(),
-      addEventListener: noop(),
-      addOnLoadListener: noop(),
-      dprint: noop()
+      onUnload: noop()
     };
   });
 
