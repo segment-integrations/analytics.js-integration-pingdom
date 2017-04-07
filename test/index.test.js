@@ -14,6 +14,8 @@ describe('Pingdom', function() {
     id: '5168f8c6abe53db732000000'
   };
 
+  function noop() {}
+
   beforeEach(function() {
     analytics = new Analytics();
     pingdom = new Pingdom(options);
@@ -36,7 +38,7 @@ describe('Pingdom', function() {
   // the events but no dice on IE, so this hax is easiest.
   after(function() {
     window.PRUM_EPISODES = {
-      onUnload: function() {}
+      onUnload: noop()
     };
   });
 
