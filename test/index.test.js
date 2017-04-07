@@ -36,7 +36,9 @@ describe('Pingdom', function() {
   // the events but no dice on IE, so this hax is easiest.
   after(function() {
     window.PRUM_EPISODES = {
-      onUnload: function() {}
+      onUnload: function() {},
+      beforeUnload: function() {},
+      done: function() {}
     };
   });
 
